@@ -11,8 +11,11 @@ import (
 func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-
-		p := filepath.Join(".", filepath.Clean(r.URL.Path))
+		cwd, err := os.Getwd()
+		if err != nil {
+			return
+		}
+		p := filepath.Join(cwd, filepath.Clean(r.URL.Path))
 
 		if f, err := os.Stat(p); errors.Is(err, os.ErrNotExist) || f.IsDir() {
 			http.ServeFile(w, r, "index.html")
