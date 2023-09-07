@@ -18,6 +18,7 @@ func main() {
 		p := filepath.Join(cwd, filepath.Clean(r.URL.Path))
 
 		if f, err := os.Stat(p); errors.Is(err, os.ErrNotExist) || f.IsDir() {
+			os.Stderr.WriteString("File not found: " + p + ", serving index.html instead\n")
 			http.ServeFile(w, r, "index.html")
 		} else {
 			http.ServeFile(w, r, p)
